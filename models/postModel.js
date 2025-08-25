@@ -23,7 +23,10 @@ const postSchema = new Schema({
         type: Number,
         default: 0
    
-    }
+    },
+    selectedMFile : String,
+    selectedPFile : String
+
 });
 
 const Post = mongoose.model('Post', postSchema); 

@@ -1,7 +1,23 @@
 
 
 const Posts = require('../models/postModel');
-// import Posts from '../models/postModel.js';
+const mongoose = require('mongoose');
+const multer = require('multer');
+const path = require('path');
+
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); 
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
+
 
 const getPosts = async (req, res, next) => {
 
@@ -14,15 +30,26 @@ const getPosts = async (req, res, next) => {
 
         res.status(404).json({ message: error.message});
     } 
-    
+
 };
 
 
 const createPost = async (req, res, next) => {
 
-    const post = req.body;
+    // const post = req.body;
+    const { title, caption } = req.body;
 
-    const newPost = new Posts(post);
+    // const newPost = new Posts(post);
+    const selectedMFile = req.files?.selectedMFile ? req.files.selectedMFile[0].path : '';
+    const selectedPFile = req.files?.selectedPFile ? req.files.selectedPFile[0].path : '';
+    
+    const newPost = new Posts({
+    title,
+    caption,
+    selectedMFile,
+    selectedPFile
+  });
+
 
     try{
        await newPost.save(); 
@@ -36,19 +63,33 @@ const createPost = async (req, res, next) => {
 };
 
 
+
+
 const updatePost = async (req, res, next) => {
 
     const { id: _id } = req.params;
-    const post = req.body;
+    // const post = req.body;
+    const { title, caption } = req.body;
+    const selectedMFile = req.files?.selectedMFile ? req.files.selectedMFile[0].path : req.body.selectedMFile;
+    const selectedPFile = req.files?.selectedPFile ? req.files.selectedPFile[0].path : req.body.selectedPFile;
 
     if(!mongoose.Types.ObjectId.isValid(_id))return res.status(404).send("No post with that id");
 
-    const updatedPost = await Posts.findByIdAndUpdate(_id, post, {new: true});
+    // const updatedPost = await Posts.findByIdAndUpdate(_id, post, {new: true});
+
+    const updatedPost = await Posts.findByIdAndUpdate(
+    _id,
+    { title, caption, selectedMFile, selectedPFile },
+    { new: true }
+  );
 
     res.json(updatedPost);
-}
+};
 
 
 
-exports.getPosts = getPosts;
-exports.createPost = createPost;
+// exports.getPosts = getPosts;
+// exports.createPost = createPost;
+// exports.updatePost = updatePost;
+
+module.exports = { getPosts, createPost, updatePost, upload };
