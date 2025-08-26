@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 
-
+// const filepath = '/Users/thamindubandara/Documents/webapplication/soundsharebackend/uploads/';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -40,8 +40,12 @@ const createPost = async (req, res, next) => {
     const { title, caption } = req.body;
 
     // const newPost = new Posts(post);
-    const selectedMFile = req.files?.selectedMFile ? req.files.selectedMFile[0].path : '';
-    const selectedPFile = req.files?.selectedPFile ? req.files.selectedPFile[0].path : '';
+    // const selectedMFile = req.files?.selectedMFile ? req.files.selectedMFile[0].path : '';
+    // const selectedPFile = req.files?.selectedPFile ? req.files.selectedPFile[0].path : '';
+
+    const selectedMFile = req.files?.selectedMFile ? `/uploads/${req.files.selectedMFile[0].filename}` : '';
+    const selectedPFile = req.files?.selectedPFile ? `/uploads/${req.files.selectedPFile[0].filename}` : '';
+
     
     const newPost = new Posts({
     title,
