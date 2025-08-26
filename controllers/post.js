@@ -1,6 +1,6 @@
 
 
-const Posts = require('../models/postModel');
+const Post = require('../models/postModel');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
@@ -22,8 +22,8 @@ const upload = multer({ storage });
 const getPosts = async (req, res, next) => {
 
     try{
-        const PostMessages = await Posts.find();
-
+        const PostMessages = await Post.find();
+//
         res.status(200).json(PostMessages);
 
     }catch (error){
@@ -44,17 +44,15 @@ const createPost = async (req, res, next) => {
     // const selectedPFile = req.files?.selectedPFile ? req.files.selectedPFile[0].path : '';
 
     const selectedMFile = req.files?.selectedMFile ? `/uploads/${req.files.selectedMFile[0].filename}` : '';
+    // const selectedMFile = req.files?.selectedMFile ? `http://localhost:3001/uploads/${req.files.selectedMFile[0].filename}` : '';
     const selectedPFile = req.files?.selectedPFile ? `/uploads/${req.files.selectedPFile[0].filename}` : '';
-
-    
-    const newPost = new Posts({
+//
+    const newPost = new Post({
     title,
     caption,
     selectedMFile,
     selectedPFile
   });
-
-
     try{
        await newPost.save(); 
 
@@ -80,8 +78,7 @@ const updatePost = async (req, res, next) => {
     if(!mongoose.Types.ObjectId.isValid(_id))return res.status(404).send("No post with that id");
 
     // const updatedPost = await Posts.findByIdAndUpdate(_id, post, {new: true});
-
-    const updatedPost = await Posts.findByIdAndUpdate(
+    const updatedPost = await Post.findByIdAndUpdate(
     _id,
     { title, caption, selectedMFile, selectedPFile },
     { new: true }
@@ -92,8 +89,43 @@ const updatePost = async (req, res, next) => {
 
 
 
+const getPostById = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) 
+    return res.status(404).json({ message: "No post with that id" });
+//
+  try {
+    const post = await Post.findById(id);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+const deletePost = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) 
+    return res.status(404).send("No post with that id");
+//
+  try {
+    await Post.findByIdAndDelete(id);
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("Delete post error:", error);
+    // res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+
 // exports.getPosts = getPosts;
 // exports.createPost = createPost;
 // exports.updatePost = updatePost;
 
-module.exports = { getPosts, createPost, updatePost, upload };
+module.exports = { getPosts,  getPostById, createPost, updatePost, deletePost, upload };

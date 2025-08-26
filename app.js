@@ -2,21 +2,62 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-// const controller = require('./controller');
-
 const posts = require('./controllers/post');
-const users = require('./controllers/users');
+// const users = require('./controllers/users');
+const postRoutes = require('./router');
 
 app.use(cors());
-
-app.use(
-    express.urlencoded({
-        extended: true,
-    })
-)
-
-
 app.use(express.json());
+app.use(express.urlencoded({extended: true,}));
+
+app.use('/uploads', express.static('uploads'));
+
+app.use('/api/posts', postRoutes);
+
+app.get('/', (req, res) => {
+  res.json({ message: 'API is running' });
+});
+
+module.exports = app;
+
+
+// app.get('/user', (req, res) => {
+
+   
+//     users.getUsers(req, res, next => {
+//         res.send();
+//     });
+// });
+
+
+// app.post('/createuser', (req, res) => {
+
+//      users.createUser(req.body, (callback) => {
+//         res.send();
+//     });
+// });
+
+
+// app.get('/post', (req, res) => {
+
+   
+//     posts.getPosts(req, res, next => {
+//         res.send();
+//     });
+// });
+
+
+// app.post('/createpost', (req, res) => {
+
+//      posts.createPost(req.body, (callback) => {
+//         res.send();
+//     });
+// });
+
+
+
+
+
 
 
 // app.get('/users', (req, res) => {
@@ -50,40 +91,3 @@ app.use(express.json());
 // });
 
 
-
-app.get('/user', (req, res) => {
-
-   
-    users.getUsers(req, res, next => {
-        res.send();
-    });
-});
-
-
-app.post('/createuser', (req, res) => {
-
-     users.createUser(req.body, (callback) => {
-        res.send();
-    });
-});
-
-
-app.get('/post', (req, res) => {
-
-   
-    posts.getPosts(req, res, next => {
-        res.send();
-    });
-});
-
-
-app.post('/createpost', (req, res) => {
-
-     posts.createPost(req.body, (callback) => {
-        res.send();
-    });
-});
-
-
-
-module.exports = app;
