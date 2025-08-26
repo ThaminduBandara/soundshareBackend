@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const post = 3001;
+const port = 3001;
 const host = 'localhost';
 const mongoose = require('mongoose');
 const router = require('./router');
@@ -10,7 +10,7 @@ const path = require('path');
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-
+app.use('/api', router); 
 app.use(express.json({limit: '30mb'}));
 app.use(express.urlencoded({limit: '30mb', extended: true }));
 app.use(cors());
@@ -30,8 +30,7 @@ const connect = async () => {
 
 connect();
 
-const server = app.listen(post , host , () => {
+const server = app.listen(port , host , () => {
             console.log(`Node server is listning to ${server.address().port}`)
 });
 
-app.use('/api', router); 

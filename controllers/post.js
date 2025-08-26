@@ -4,6 +4,7 @@ const Post = require('../models/postModel');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // const filepath = '/Users/thamindubandara/Documents/webapplication/soundsharebackend/uploads/';
 
@@ -95,6 +96,7 @@ const getPostById = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) 
     return res.status(404).json({ message: "No post with that id" });
 //
+
   try {
     const post = await Post.findById(id);
     if (!post) return res.status(404).json({ message: "Post not found" });
@@ -107,17 +109,38 @@ const getPostById = async (req, res) => {
 
 
 const deletePost = async (req, res) => {
+
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) 
     return res.status(404).send("No post with that id");
 //
+
   try {
+    
+    const post = await Post.findById(id);
+    if (!post) return res.status(404).json({ message: "Post not found" });
+    // res.status(200).json({ message: "Post deleted successfully" });
+ 
+    if (post.selectedMFile) {
+      const audioPath = path.join(__dirname, '..', post.selectedMFile); 
+      fs.unlink(audioPath, (err) => {
+        if (err) console.log("Error deleting audio:", err);
+        // else console.log("Audio deleted:", audioPath);
+      });
+    }
+
+    if (post.selectedPFile) {
+      const imagePath = path.join(__dirname, '..', post.selectedPFile); 
+      fs.unlink(imagePath, (err) => {
+        if (err) console.log("Error deleting image:", err);
+        // else console.log("Image deleted:", imagePath);
+      });
+    }
     await Post.findByIdAndDelete(id);
-    res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
     console.error("Delete post error:", error);
-    // res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

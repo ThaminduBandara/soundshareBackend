@@ -4,12 +4,15 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
 
-    id : Number,
+    
     name : String,
+    username: String,
     email : String,
     password : String,
     profilePicture : String,
     bio : String,
+    followers: Number,
+    following: Number
    
 
 });
