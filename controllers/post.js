@@ -38,6 +38,7 @@ const getPosts = async (req, res, next) => {
 const createPost = async (req, res, next) => {
 
     // const post = req.body;
+   
     const { title, caption } = req.body;
 
     // const newPost = new Posts(post);

@@ -9,6 +9,7 @@ const router = require('./router');
 const path = require('path');
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/useruploads', express.static(path.join(__dirname, 'useruploads')));
 
 app.use('/api', router); 
 app.use(express.json({limit: '30mb'}));

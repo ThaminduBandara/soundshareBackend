@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { getPosts, getPostById, createPost, updatePost, deletePost, upload } = require('./controllers/post');
 
-const { getUsers, getUserById, createUser, updateUser, deleteUser, upload } = require('./controllers/users');
+const { getUsers, getUserById, createUser, updateUser, deleteUser, useruploads } = require('./controllers/users');
 // const users = require('./controllers/users');
 // const Post = require('./models/postModel');
 
@@ -40,6 +40,7 @@ router.delete('/posts/:id', deletePost);
 router.get('/user', getUsers);
 
 router.post('/createuser', upload.fields([{ name: 'profilePicture', maxCount: 1 }]), createUser);
+// router.post('/createuser', createUser);
 
 router.patch('/updateuser/:id', upload.fields([{ name: 'profilePicture', maxCount: 1 },]), updateUser);
 

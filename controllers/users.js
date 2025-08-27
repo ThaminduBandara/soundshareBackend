@@ -47,14 +47,14 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); 
+    cb(null, 'useruploads/'); 
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
-const upload = multer({ storage });
+const useruploads = multer({ storage });
 
 
 const getUsers = async (req, res, next) => {
@@ -74,11 +74,13 @@ const getUsers = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
 
-  
+    
+
+    //  const user = req.body;
     const { username, email, password } = req.body;
 
 
-    // const selectedMFile = req.files?.selectedMFile ? `/uploads/${req.files.selectedMFile[0].filename}` : '';
+    const profilePicture = req.files?.profilePicture ? `/useruploads/${req.files.profilePicture[0].filename}` : '';
     // const selectedPFile = req.files?.selectedPFile ? `/uploads/${req.files.selectedPFile[0].filename}` : '';
 
     const newUser = new User({
@@ -177,4 +179,4 @@ const deleteUser = async (req, res) => {
 // exports.createPost = createPost;
 // exports.updatePost = updatePost;
 
-module.exports = { getUsers,  getUserById, createUser, updateUser, deleteUser, upload };
+module.exports = { getUsers,  getUserById, createUser, updateUser, deleteUser, useruploads };
