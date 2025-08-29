@@ -11,7 +11,6 @@ const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/useruploads', express.static(path.join(__dirname, 'useruploads')));
 
-app.use('/api', router); 
 app.use(express.json({limit: '30mb'}));
 app.use(express.urlencoded({limit: '30mb', extended: true }));
 app.use(cors());
@@ -35,3 +34,4 @@ const server = app.listen(port , host , () => {
             console.log(`Node server is listning to ${server.address().port}`)
 });
 
+app.use('/api', router); 

@@ -3,12 +3,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
-
+  
     
     title : String,
     caption : String,
     creator : String,
-    username: String,
     likeCount: {
         type: Number,
         default: 0
