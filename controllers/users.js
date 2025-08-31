@@ -20,7 +20,7 @@ const useruploads = multer({ storage });
 
 
 
-const getUsers = async (req, res, next) => {
+const getUsers = async (req, res) => {
     try{
         const UserMessages = await User.find();
         res.status(200).json(UserMessages);
@@ -68,8 +68,9 @@ const loginUser = async (req, res) => {
 
     if (user.password !== password) {
       return res.status(401).json({ message: "Invalid credentials." });
+
     }
-//check here later
+ 
     res.status(200).json({ 
       
       message: 'Login successful',
